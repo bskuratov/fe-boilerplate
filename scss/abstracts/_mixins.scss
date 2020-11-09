@@ -72,6 +72,15 @@
   font-family: 'object-fit: cover;';
 }
 
+@mixin hover {
+  @media (hover: hover) {
+    &:hover,
+    &:focus {
+      @content;
+    }
+  }
+}
+
 @mixin underline {
   position: relative;
   line-height: 1.3;
