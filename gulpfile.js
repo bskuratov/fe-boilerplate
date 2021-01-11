@@ -5,12 +5,11 @@ const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const rename = require('gulp-rename');
 const cssnano = require('cssnano');
-const uglify = require('gulp-uglify');
-const babel = require('gulp-babel');
-const concat = require('gulp-concat');
-const order = require('gulp-order');
 const sourcemaps = require('gulp-sourcemaps');
 const pug = require('gulp-pug');
+const compiler = require('webpack');
+const webpack = require('webpack-stream');
+const webpackConfig = require('./webpack.config.js');
 
 // Development Tasks
 // -----------------
@@ -19,16 +18,16 @@ const pug = require('gulp-pug');
 gulp.task('browserSync', () => {
   browserSync.init({
     server: {
-      baseDir: '.'
+      baseDir: '.',
     },
-    notify: false
+    notify: false,
+    // https: true,
   });
 
   gulp.watch('./scss/**/**/*.scss', gulp.parallel('sass'));
   gulp.watch('./*.html').on('change', browserSync.reload);
   gulp.watch('templates/**/*.pug', gulp.parallel('pug'));
-  gulp.watch('./js/**/main.js', gulp.parallel('scripts'));
-  gulp.watch('./js/vendor/*.js', gulp.parallel('libs'));
+  gulp.watch('./js/main.js', gulp.parallel('scripts'));
 });
 
 gulp.task('sass', () => {
@@ -47,18 +46,12 @@ gulp.task('scripts', () => {
   return gulp
     .src('./js/main.js')
     .pipe(rename('main.min.js'))
-    .pipe(babel({ presets: ['@babel/env'] }))
-    .pipe(uglify())
+    .pipe(
+      webpack(webpackConfig, compiler, function (err, stats) {
+        console.log(err);
+      })
+    )
     .pipe(gulp.dest('js/'))
-    .pipe(browserSync.stream());
-});
-
-gulp.task('libs', () => {
-  return gulp
-    .src(['./js/vendor/*.js', '!./js/vendor/jquery-3.3.1.min.js'])
-    .pipe(order(['ScrollMagic.min.js', '*.js']))
-    .pipe(concat('libs.min.js'))
-    .pipe(gulp.dest('./js/'))
     .pipe(browserSync.stream());
 });
 
@@ -71,7 +64,4 @@ gulp.task('pug', function buildHTML() {
 });
 
 // Watchers
-gulp.task(
-  'watch',
-  gulp.series('pug', 'sass', 'libs', 'scripts', 'browserSync')
-);
+gulp.task('watch', gulp.series('pug', 'sass', 'scripts', 'browserSync'));

@@ -1,9 +1,3 @@
-/* Init object fit polyfill */
-/* To make it work, add 'font-family: 'object-fit: cover;';' to image */
-// if (window.objectFitImages) {
-//   window.objectFitImages();
-// }
-
 $(document).ready(() => {
   let wWidth = $(window).width();
   let navState = false;
@@ -27,8 +21,8 @@ $(document).ready(() => {
 
   if (isObserver) {
     observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
+      (entries) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
             observer.unobserve(entry.target);
@@ -41,7 +35,7 @@ $(document).ready(() => {
 
   function isTouchDevice() {
     const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
-    const mq = query => {
+    const mq = (query) => {
       return window.matchMedia(query).matches;
     };
 
@@ -72,9 +66,9 @@ $(document).ready(() => {
   // leading edge, instead of the trailing.
   function debounce(func, wait, immediate, ...args) {
     let timeout;
-    return function() {
+    return function () {
       const context = this;
-      const later = function() {
+      const later = function () {
         timeout = null;
         if (!immediate) func.apply(context, args);
       };
@@ -108,9 +102,7 @@ $(document).ready(() => {
       const scrollTop = $('html').scrollTop()
         ? $('html').scrollTop()
         : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
-      $('html')
-        .addClass('disable-scrolling')
-        .css('top', -scrollTop);
+      $('html').addClass('disable-scrolling').css('top', -scrollTop);
     }
   }
 
@@ -137,20 +129,14 @@ $(document).ready(() => {
     const $submenu = $item.siblings('.sub-menu');
 
     if ($item.parent().hasClass('is-active')) {
-      $item
-        .attr('aria-expanded', 'false')
-        .parent()
-        .removeClass('is-active');
+      $item.attr('aria-expanded', 'false').parent().removeClass('is-active');
 
       if (wWidth < 1280) {
         $submenu.slideUp();
       }
     } else {
       $parentLi.removeClass('is-active');
-      $item
-        .attr('aria-expanded', 'true')
-        .parent()
-        .addClass('is-active');
+      $item.attr('aria-expanded', 'true').parent().addClass('is-active');
 
       if (wWidth < 1280) {
         $subMenu.slideUp();
@@ -172,13 +158,13 @@ $(document).ready(() => {
       navState = !navState;
     });
 
-    $parentLinks.on('touchend', e => {
+    $parentLinks.on('touchend', (e) => {
       e.preventDefault();
       handleNavTouch(e);
     });
 
     /* Navigation with tabbing */
-    $(window).keyup(e => {
+    $(window).keyup((e) => {
       const code = e.keyCode ? e.keyCode : e.which;
 
       if (code === 9) {
@@ -201,7 +187,7 @@ $(document).ready(() => {
     });
 
     // Re-enable focus styling when Tab is pressed
-    document.body.addEventListener('keydown', event => {
+    document.body.addEventListener('keydown', (event) => {
       if (event.key === 'Tab') {
         document.body.classList.add('is-tab');
       }
