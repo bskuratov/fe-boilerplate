@@ -30,6 +30,16 @@ body {
   padding: 0;
 }
 
+* {
+  &:focus {
+    outline: none;
+  }
+
+  @include when-inside('.is-tab') {
+    outline: 2px solid $brand-color;
+  }
+}
+
 img {
   display: block;
   height: auto;
@@ -65,4 +75,18 @@ button {
   background-color: transparent;
   outline: none;
   cursor: pointer;
+}
+
+.skip-to-content-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 2rem;
+  color: #fff;
+  opacity: 0;
+
+  &:focus {
+    z-index: 1000;
+    opacity: 1;
+  }
 }

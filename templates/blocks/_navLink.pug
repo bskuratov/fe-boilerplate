@@ -1,0 +1,6 @@
+mixin navLink(title, url)
+  li(class=(page == title ? 'current-menu-item' : '') class=(block ? 'menu-item-has-children' : ''))&attributes(attributes)
+    a(href=url)= title
+    if block
+      ul.sub-menu
+        block
