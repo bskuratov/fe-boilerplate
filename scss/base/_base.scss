@@ -33,10 +33,10 @@ body {
 * {
   &:focus {
     outline: none;
-  }
 
-  @include when-inside('.is-tab') {
-    outline: 2px solid $brand-color;
+    @include when-inside('.is-tab') {
+      outline: 2px solid $brand-color;
+    }
   }
 }
 

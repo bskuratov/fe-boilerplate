@@ -5,7 +5,7 @@ $(document).ready(() => {
   const $nav = $header.find('.nav');
   const $parentLi = $nav.find('.menu-item-has-children');
   const $parentLinks = $parentLi.children('a');
-  const $subMenu = $parentLi.children('.sub-menu');
+  const $subMenus = $parentLi.children('.sub-menu');
   let isObserver = true;
   let observer;
   let isTouch;
@@ -110,27 +110,21 @@ $(document).ready(() => {
 
   function handleNavTouch(e) {
     const $item = $(e.target);
-    const $submenu = $item.siblings('.sub-menu');
+    const $curSubMenu = $item.siblings('.sub-menu');
 
-    if ($item.parent().hasClass('is-active')) {
-      $item
-        .attr('aria-expanded', 'false')
-        .parent()
-        .removeClass('is-active');
+    if ($item.parent().hasClass('is-opened')) {
+      $item.parent().removeClass('is-opened');
 
       if (wWidth < 1280) {
-        $submenu.slideUp();
+        $curSubMenu.slideUp();
       }
     } else {
-      $parentLi.removeClass('is-active');
-      $item
-        .attr('aria-expanded', 'true')
-        .parent()
-        .addClass('is-active');
+      $parentLi.removeClass('is-opened');
+      $item.parent().addClass('is-opened');
 
       if (wWidth < 1280) {
-        $subMenu.slideUp();
-        $submenu.slideDown();
+        $subMenus.slideUp();
+        $curSubMenu.slideDown();
       }
     }
   }
@@ -160,10 +154,15 @@ $(document).ready(() => {
       if (code === 9) {
         if ($parentLinks.filter(':focus').length) {
           handleNavTouch(e);
-        } else if ($nav.find('>li>a:focus').length) {
-          $parentLi.removeClass('is-active');
+        } else {
+          const link = $nav.find('a:focus');
 
-          if (wWidth < 1280) {
+          if (
+            link.length &&
+            !link.parent().hasClass('.menu-item-has-children') &&
+            !link.closest('.sub-menu').length
+          ) {
+            $parentLi.removeClass('is-opened');
             $parentLi.children('.sub-menu').slideUp();
           }
         }
